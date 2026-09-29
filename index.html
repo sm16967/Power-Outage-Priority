@@ -166,8 +166,75 @@ footer{text-align:center;color:#8a929c;font-size:11px;padding:20px}
 
 <script>
   const list=document.getElementById("list");
-  
-   
-
-
-  </head>
+  let appliances=[
+ ["Refrigerator",150],
+ ["Fan",60],
+ ["LED Light",10],
+ ["Wi-Fi Router",12]
+];
+function addAppliance(name="New Appliance",watts=50){
+ const row=document.createElement("div");
+   row.className="appliance";
+   row.innerHTML=`
+     <input class="name" value="${name}">
+  <input class="watt" type="number" value="${watts}" min="0">
+  <select class="priority">
+   <option>Essential</option>
+   <option>Important</option>
+   <option>Optional</option>
+     </select>
+  <button class="remove" onclick="this.parentElement.remove()">×</button>
+ `;
+   list.appendChild(row);
+}
+  appliances.forEach(x=>addAppliance(...x));
+  function calculate(){
+     const battery=+document.getElementById("battery").value||0;
+     const usable=(+document.getElementById("usable").value||0)/100;
+     const efficiency=(+document.getElementById("efficiency").value||0)/100;
+     const target=+document.getElementById("target").value||0;
+     const rows=[...document.querySelectorAll(".appliance")];
+     let total=0,data=[];
+     rows.forEach(r=>{
+       const name=r.querySelector(".name").value||"Unnamed";
+        const watts=+r.querySelector(".watt").value||0;
+         const priority=r.querySelector("select").value;
+        total+=watts;
+        data.push({name,watts,priority});
+ });
+ const usableWh=battery*usable*efficiency;
+ const runtime=total?usableWh/total:0;
+    document.getElementById("load").textContent=total+" W";
+ document.getElementById("runtime").textContent=runtime.toFixed(1)+" h";
+ const status=document.getElementById("status");
+     if(runtime>=target){
+       status.textContent="OK";
+       status.style.color="#16834b";
+        }else{
+         status.textContent="Short";
+       status.style.color="#c53b32";
+ }
+     data.sort((a,b)=>b.watts-a.watts);
+     document.getElementById("analysis").innerHTML=data.map((x,i)=>`
+  <div class="priority">
+   <span>
+    ${i+1}. <b>${x.name}</b>
+      <small> — ${x.watts} W</small>
+   </span>
+    <span class="badge">${x.priority}</span>
+  </div>
+ `).join("");
+     document.getElementById("output").style.display="block";
+}
+  function showHelp(){
+    document.getElementById("modal").style.display="flex";
+  }
+  function hideHelp(){
+     document.getElementById("modal").style.display="none";
+  }
+  window.onclick=e=>{
+    if(e.target===document.getElementById("modal"))hideHelp();
+  };
+  </script>
+  </body>
+    </html>
