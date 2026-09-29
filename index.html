@@ -87,9 +87,87 @@ footer{text-align:center;color:#8a929c;font-size:11px;padding:20px}
 }
 </style>
 </head>
-  
-<body>
-
+  <body>
 <div class="app">
+  <header>
+    <div>
+  <h1> Backup System</h3>
+       <div class="grid">
+  <div>
+   <label>Battery Capacity (Wh)</label>
+   <input id="battery" type="number" value="1000" min="1">
+  </div>
+  <div>
+   <label>Usable Battery %</label>
+   <input id="usable" type="number" value="85" min="1" max="100">
+  </div>
+ <div>
+   <label>Inverter Efficiency %</label>
+   <input id="efficiency" type="number" value="90" min="1" max="100">
+  </div>
+  <div>
+   <label>Required Outage (hours)</label>
+   <input id="target" type="number" value="8" min="0.1">
+  </div>
+ </div>
+      </section>
+      <section class="card">
+        <h3>Appliances</h3>
+         <div id="list"></div>
+         <button class="add" onclick="addAppliance()">＋ Add Appliance</button>
+ <button class="main" onclick="calculate()">Calculate Power Plan</button>
+</section>
+<section class="card" id="output" style="display:none">
+   <h3>Power Plan</h3>
+   <div class="result">
+  <div class="stat">
+   <small>Total Load</small>
+   <b id="load">0 W</b>
+  </div>
+ <div class="stat">
+   <small>Estimated Runtime</small>
+   <b id="runtime">0 h</b>
+  </div>
+       <div class="stat">
+   <small>Target</small>
+   <b id="status">—</b>
+  </div>
+ </div>
+   <h4>Priority Analysis</h4>
+ <div id="analysis"></div>
+</section>
+      <footer>
+ Estimates only. Actual runtime varies with battery age, temperature, inverter behavior and appliance startup loads.
+</footer>
+</div>
+ <div class="modal" id="modal">
+ <div class="modalbox">
+  <button class="close" onclick="hideHelp()">×</button>
+  <h2>How does it work?</h2>
+    <p class="note">
+   <b>1.</b> Enter your battery/UPS capacity in Wh.
+   <br><br>
+   <b>2.</b> Set the usable battery percentage and inverter efficiency.
+   <br><br>
+   <b>3.</b> Add your appliances and their approximate wattage.
+   <br><br>
+   <b>4.</b> Enter how many hours the backup needs to last.
+   <br><br>
+   <b>5.</b> Press <b>Calculate Power Plan</b>.
+   <br><br>
+   The app estimates total electrical load and backup runtime, then identifies which appliances consume the most power.
+   <br><br>
+   <b>Tip:</b> During an outage, reducing high-power loads generally increases backup runtime.
+  </p>
+
+  <button class="main" onclick="hideHelp()">Got it</button>
+ </div>
+</div>
+
+<script>
+  const list=document.getElementById("list");
+  
+   
+
 
   </head>
